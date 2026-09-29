@@ -13,7 +13,7 @@
    ========================================================================== */
 
 window.QPACK = {
-  SHOW_DRAFT_BADGES: true,
+  SHOW_DRAFT_BADGES: false,
 
   company: {
     nameAr: "مصنع القصيم للكرتون المضلع",
