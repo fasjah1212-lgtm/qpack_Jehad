@@ -15,6 +15,14 @@
   const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2); // heavy in-out
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
+  // always open at the very top: no restored scroll position, no #section jump
+  if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+  if (location.hash) history.replaceState(null, "", location.pathname + location.search);
+  const toTop = () => window.scrollTo(0, 0);
+  toTop();
+  addEventListener("load", toTop);
+  addEventListener("pageshow", (e) => { if (e.persisted) toTop(); });
+
   const root = document.documentElement;
   const RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const mqMobile = matchMedia("(max-width: 900px)");
