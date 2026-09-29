@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>QPACK — مصنع القصيم للكرتون المضلع</title>
+  <meta name="description" content="مصنع القصيم للكرتون المضلع QPACK — الشريك الموثوق لحلول التغليف المبتكرة. من لوح كرتون مسطح إلى منتج تغليف متكامل.">
+  <meta name="theme-color" content="#F3F1EC">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@300;400;500;700&family=Archivo:wght@500;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a class="skip" href="#main">تخطَّ إلى المحتوى</a>
+
+  <!-- Cursor (desktop / fine pointer only) -->
+  <div class="cursor" aria-hidden="true"><span class="cursor__dot"></span><span class="cursor__ring"></span><span class="cursor__label"></span></div>
+
+  <!-- ================= HEADER ================= -->
+  <header class="hdr" id="top">
+    <a class="hdr__logo" href="#top" aria-label="QPACK — الرئيسية"><img src="assets/logo.svg" alt="QPACK" width="132" height="34"></a>
+    <nav class="hdr__nav" aria-label="التنقل الرئيسي">
+      <a href="#about">من نحن</a>
+      <a href="#products">المنتجات</a>
+      <a href="#sectors">القطاعات</a>
+      <a href="#quality">الجودة</a>
+      <a href="#story">الأخبار والتوظيف</a>
+      <a href="#contact">تواصل معنا</a>
+    </nav>
+    <a class="btn btn--label btn--sm hdr__cta" href="#quote"><span>اطلب عرض سعر</span></a>
+    <button class="hdr__burger" aria-label="القائمة" aria-expanded="false"><span></span><span></span></button>
+    <div class="hdr__progress" aria-hidden="true"><i></i></div>
+  </header>
+
+  <main id="main">
+
+    <!-- ================= 00–05 : THE JOURNEY (hero + build) ================= -->
+    <section class="journey" id="journey" aria-label="من لوح مسطح إلى صندوق جاهز">
+      <div class="journey__sticky">
+        <div class="journey__bg" aria-hidden="true">
+          <div class="rules"></div>
+          <div class="journey__coords mono"><span>X 000.0</span><span>Y 000.0</span><span>FLUTE C</span></div>
+        </div>
+
+        <div class="journey__hero">
+          <p class="eyebrow mono">FROM FLAT SHEET TO FINISHED PACKAGE</p>
+          <h1 class="display print-in" data-company="headline">الشريك الموثوق لحلول التغليف المبتكرة</h1>
+          <p class="journey__intro" data-company="intro"></p>
+          <div class="journey__ctas">
+            <a class="btn btn--label" href="#products" data-cursor="Explore"><span>استكشف حلولنا</span></a>
+            <a class="btn btn--ghost" href="#quote"><span>اطلب عرض سعر</span></a>
+          </div>
+          <p class="journey__hint mono" aria-hidden="true"><i></i>مرّر لبدء التصنيع</p>
+        </div>
+
+        <!-- stage copy -->
+        <ol class="stages" aria-label="مراحل صناعة الصندوق">
+          <li class="stage" data-stage="1">
+            <span class="stage__no mono">01</span>
+            <h2 class="stage__t">اللوح الخام</h2>
+            <p>طبقتان من ورق الوجه، وبينهما طبقة مموّجة (Fluting). ثلاث طبقات تعمل معًا كلوح واحد.</p>
+          </li>
+          <li class="stage" data-stage="2">
+            <span class="stage__no mono">02</span>
+            <h2 class="stage__t">القص والتشكيل</h2>
+            <p>خطوط القص تحدد الحواف، وخطوط التخديد تحدد أماكن الطي.</p>
+          </li>
+          <li class="stage" data-stage="3">
+            <span class="stage__no mono">03</span>
+            <h2 class="stage__t">الطباعة</h2>
+            <p>طيف واسع من خدمات الطباعة المتكاملة، معززًا بطاقات إنتاجية عالية.</p>
+          </li>
+          <li class="stage" data-stage="4">
+            <span class="stage__no mono">04</span>
+            <h2 class="stage__t">الطي</h2>
+            <p>الأوجه ترتفع، والأجنحة تُغلق. اللوح المسطح يأخذ شكله.</p>
+          </li>
+          <li class="stage" data-stage="5">
+            <span class="stage__no mono">05</span>
+            <h2 class="stage__t">الصندوق النهائي</h2>
+            <p class="en mono">Quality Packaging · Quiet Costs · Quick Service</p>
+          </li>
+        </ol>
+
+        <div class="rail" aria-hidden="true">
+          <span data-r="1">01</span><span data-r="2">02</span><span data-r="3">03</span><span data-r="4">04</span><span data-r="5">05</span>
+          <i class="rail__fill"></i>
+        </div>
+
+        <div class="journey__stage3d" aria-hidden="true">
+          <div class="scene" id="heroScene"></div>
+          <div class="machine machine--cut"><i></i></div>
+          <div class="machine machine--print"><i></i></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= ABOUT : LAYERS ================= -->
+    <section class="about" id="about">
+      <header class="sec-tab" data-no="06" data-en="ABOUT">
+        <span class="sec-tab__no mono">06 / ABOUT</span>
+        <h2 class="sec-tab__t print-in">طبقة فوق طبقة</h2>
+      </header>
+
+      <div class="about__pin">
+        <div class="about__sticky">
+          <div class="stack" aria-hidden="true"></div>
+          <div class="about__copy">
+            <p class="mono eyebrow">QPACK / 5 PLIES</p>
+            <div class="layers" role="list"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="vmv">
+        <article class="vmv__card surface" data-k="vision"><span class="mono">VISION</span><h3></h3><p></p></article>
+        <article class="vmv__card surface" data-k="mission"><span class="mono">MISSION</span><h3></h3><p></p></article>
+        <article class="vmv__card surface" data-k="values"><span class="mono">VALUES</span><h3></h3><p></p></article>
+      </div>
+
+      <!-- page folds like a box flap -->
+      <div class="flapfold" aria-hidden="true"><div class="flapfold__leaf"><span class="mono">FOLD ALONG CREASE ▸ 07 PRODUCTS</span></div></div>
+    </section>
+
+    <!-- ================= PRODUCTS : BOX OPENS ================= -->
+    <section class="products" id="products">
+      <header class="sec-tab sec-tab--light" data-no="07">
+        <span class="sec-tab__no mono">07 / PRODUCTS</span>
+        <h2 class="sec-tab__t print-in">افتح الصندوق</h2>
+      </header>
+
+      <div class="explorer">
+        <div class="explorer__stage" data-cursor="Rotate">
+          <div class="dims mono" aria-hidden="true">
+            <span class="dims__w"></span><span class="dims__h"></span><span class="dims__d"></span>
+          </div>
+          <div class="scene scene--explorer" id="productScene"></div>
+          <p class="explorer__drag mono" aria-hidden="true">اسحب للتدوير ⟲</p>
+        </div>
+
+        <aside class="explorer__panel">
+          <div class="picker" role="group" aria-label="نوع الصندوق">
+            <p class="picker__l mono">01 — نوع الصندوق</p>
+            <div class="chips" id="pickType"></div>
+          </div>
+          <div class="picker" role="group" aria-label="الحجم">
+            <p class="picker__l mono">02 — الحجم</p>
+            <div class="chips" id="pickSize"></div>
+          </div>
+          <div class="picker" role="group" aria-label="القطاع">
+            <p class="picker__l mono">03 — القطاع</p>
+            <div class="chips" id="pickSector"></div>
+          </div>
+          <div class="picker" role="group" aria-label="الطباعة">
+            <p class="picker__l mono">04 — الطباعة</p>
+            <div class="chips" id="pickPrint"></div>
+          </div>
+
+          <div class="spec surface" aria-live="polite">
+            <p class="spec__en mono"></p>
+            <h3 class="spec__name"></h3>
+            <p class="spec__use"></p>
+            <ul class="spec__list"></ul>
+            <p class="spec__note mono">نموذج توضيحي — المواصفات النهائية تُحدد مع فريق QPACK</p>
+            <a class="btn btn--label" href="#quote" id="specCta"><span>اطلب هذا النموذج</span></a>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ================= SECTORS ================= -->
+    <section class="sectors" id="sectors">
+      <div class="sectors__sticky">
+        <header class="sec-tab sec-tab--inline" data-no="08">
+          <span class="sec-tab__no mono">08 / SECTORS</span>
+          <h2 class="sec-tab__t">صندوق واحد، سياقات متعددة</h2>
+        </header>
+        <div class="sectors__scenes" aria-hidden="true"></div>
+        <div class="scene scene--sector" id="sectorScene" aria-hidden="true"></div>
+        <ol class="sectors__list"></ol>
+      </div>
+    </section>
+
+    <!-- cutter transition -->
+    <div class="cutter" aria-hidden="true"><div class="cutter__sticky"><div class="cutter__top"></div><div class="cutter__blade"><span class="mono">DIE-CUT ▸ 09 QUALITY</span></div></div></div>
+
+    <!-- ================= QUALITY ================= -->
+    <section class="quality" id="quality">
+      <div class="quality__sticky">
+        <header class="sec-tab sec-tab--inline sec-tab--dark" data-no="09">
+          <span class="sec-tab__no mono">09 / QUALITY INSPECTION</span>
+          <h2 class="sec-tab__t">الجودة هدفنا</h2>
+        </header>
+        <div class="inspect">
+          <svg class="inspect__svg" viewBox="0 0 1000 560" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+            <defs>
+              <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0V20" fill="none" stroke="currentColor" stroke-opacity=".08"/></pattern>
+            </defs>
+            <rect width="1000" height="560" fill="url(#grid)"/>
+            <g class="inspect__board" transform-origin="500 280"></g>
+            <g class="inspect__measure"></g>
+          </svg>
+          <div class="inspect__pins"></div>
+        </div>
+        <p class="quality__foot mono">TQM · ISO:9001 · ISO:14001 · ISO:45001 · 5M</p>
+      </div>
+    </section>
+
+    <!-- ================= STORY : TIMELINE / NEWS / CAREERS ================= -->
+    <section class="story" id="story">
+      <header class="sec-tab" data-no="10">
+        <span class="sec-tab__no mono">10 / ROLL</span>
+        <h2 class="sec-tab__t print-in">على لفّة الورق</h2>
+      </header>
+      <div class="roll">
+        <div class="roll__sticky">
+          <div class="roll__paper"><div class="roll__track"></div></div>
+          <div class="roll__core" aria-hidden="true"></div>
+        </div>
+      </div>
+
+      <div class="story__grid">
+        <div class="news">
+          <p class="mono eyebrow">أخبارنا / NEWS</p>
+          <div class="news__list"></div>
+        </div>
+        <div class="careers surface">
+          <p class="mono eyebrow">وظائف / CAREERS</p>
+          <h3>انضم إلى فريق المصنع</h3>
+          <p class="careers__t"></p>
+          <a class="btn btn--label" id="careersCta"><span></span></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= QUOTE WIZARD ================= -->
+    <section class="quote" id="quote">
+      <header class="sec-tab" data-no="11">
+        <span class="sec-tab__no mono">11 / ORDER</span>
+        <h2 class="sec-tab__t print-in">اطلب عرض سعر</h2>
+      </header>
+
+      <div class="wizard">
+        <ol class="wizard__steps mono" aria-hidden="true">
+          <li class="is-on">اختر صندوقك</li><li>المقاسات</li><li>الكمية</li><li>الطباعة</li><li>بياناتك</li>
+        </ol>
+        <form class="wizard__form" novalidate>
+          <fieldset class="wstep is-on" data-step="0">
+            <legend>اختر صندوقك</legend>
+            <div class="chips chips--big" id="wType"></div>
+          </fieldset>
+          <fieldset class="wstep" data-step="1">
+            <legend>حدد المقاسات <small class="mono">(مم)</small></legend>
+            <div class="fields fields--3">
+              <label>الطول<input type="number" name="L" min="50" max="2000" inputmode="numeric" placeholder="400"></label>
+              <label>العرض<input type="number" name="W" min="50" max="2000" inputmode="numeric" placeholder="300"></label>
+              <label>الارتفاع<input type="number" name="H" min="30" max="2000" inputmode="numeric" placeholder="250"></label>
+            </div>
+          </fieldset>
+          <fieldset class="wstep" data-step="2">
+            <legend>حدد الكمية</legend>
+            <div class="qty">
+              <input type="range" name="qty" min="0" max="5" step="1" value="1" aria-label="الكمية">
+              <output class="qty__out mono"></output>
+            </div>
+          </fieldset>
+          <fieldset class="wstep" data-step="3">
+            <legend>حدد الطباعة</legend>
+            <div class="chips chips--big" id="wPrint"></div>
+          </fieldset>
+          <fieldset class="wstep" data-step="4">
+            <legend>أدخل بياناتك</legend>
+            <div class="fields">
+              <label>الاسم<input name="name" required autocomplete="name"></label>
+              <label>الشركة<input name="company" autocomplete="organization"></label>
+              <label>الجوال<input name="phone" type="tel" required autocomplete="tel" inputmode="tel"></label>
+              <label>البريد الإلكتروني<input name="email" type="email" autocomplete="email"></label>
+              <label class="full">ملاحظات<textarea name="notes" rows="3"></textarea></label>
+            </div>
+          </fieldset>
+          <div class="wizard__nav">
+            <button type="button" class="btn btn--ghost" data-w="prev"><span>السابق</span></button>
+            <button type="button" class="btn btn--label" data-w="next"><span>التالي</span></button>
+            <button type="submit" class="btn btn--label btn--send" hidden><span>إرسال طلب عرض السعر</span></button>
+          </div>
+          <p class="wizard__msg" role="status"></p>
+        </form>
+
+        <aside class="mock surface">
+          <div class="scene scene--mock" id="mockScene" aria-hidden="true"></div>
+          <dl class="mock__sum"></dl>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ================= FINALE / CONTACT ================= -->
+    <section class="finale" id="contact">
+      <div class="finale__pin">
+        <div class="finale__sticky">
+          <div class="scene scene--finale" id="finaleScene" aria-hidden="true"></div>
+          <div class="finale__copy">
+            <p class="mono eyebrow">12 / PACKED</p>
+            <h2 class="display print-in">لنصنع تغليفك القادم.</h2>
+          </div>
+        </div>
+      </div>
+      <div class="contact">
+        <div class="contact__main">
+          <a class="contact__big" id="cMain"></a>
+          <a class="contact__big contact__big--mail" id="cMail"></a>
+          <p class="contact__addr" id="cAddr"></p>
+          <a class="btn btn--label" href="#quote"><span>اطلب عرض سعر</span></a>
+        </div>
+        <ul class="contact__lines" id="cLines"></ul>
+        <div class="contact__map cutline" data-map></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ================= FOOTER : INSIDE THE OPEN BOX ================= -->
+  <footer class="ftr">
+    <div class="ftr__flaps" aria-hidden="true"><i></i><i></i></div>
+    <div class="ftr__in">
+      <img src="assets/logo.svg" alt="QPACK" width="132" height="34" class="ftr__logo">
+      <nav class="ftr__nav" aria-label="روابط التذييل">
+        <a href="#about">من نحن</a><a href="#products">المنتجات</a><a href="#quality">الجودة</a><a href="#story">التوظيف</a><a href="#contact">تواصل معنا</a>
+      </nav>
+      <div class="ftr__social" id="fSocial"></div>
+      <div class="ftr__contact mono" id="fContact"></div>
+      <p class="ftr__copy mono">© <span id="year"></span> مصنع القصيم للكرتون المضلع — QPACK</p>
+    </div>
+  </footer>
+
+  <noscript><div class="noscript">مصنع القصيم للكرتون المضلع — القصيم، بريدة، المدينة الصناعية الأولى — 00966 16 3220858 — INFO@QPACK.COM.SA</div></noscript>
+
+  <script src="js/content.js"></script>
+  <script src="js/box.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

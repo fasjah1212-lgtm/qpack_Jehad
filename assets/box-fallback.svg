@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 360">
+  <!-- static isometric box: shown only when CSS 3D is unavailable -->
+  <ellipse cx="200" cy="318" rx="170" ry="26" fill="#14100a" opacity=".14"/>
+  <path d="M60 110 200 170v160L60 270z" fill="#FBFAF7" stroke="#141619" stroke-opacity=".2"/>
+  <path d="M200 170 340 110v160l-140 60z" fill="#E9E5DC" stroke="#141619" stroke-opacity=".2"/>
+  <path d="M60 110 200 50l140 60-140 60z" fill="#F4F1EA" stroke="#141619" stroke-opacity=".2"/>
+  <path d="M130 80l140 60M200 50v0" stroke="#141619" stroke-opacity=".45" stroke-dasharray="5 5"/>
+  <path d="M60 248 200 308v22L60 270z" fill="#123E6B"/>
+  <path d="M200 308l140-60v22l-140 60z" fill="#0e3155"/>
+  <text x="96" y="210" font-family="Arial" font-weight="700" font-size="30" fill="#123E6B" transform="skewY(23)">QPACK</text>
+</svg>
