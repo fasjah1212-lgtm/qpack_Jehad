@@ -277,7 +277,6 @@
   const stageEl = $(".explorer__stage");
   const pState = { type: C.products[0].id, size: "m", sector: C.sectors[C.sectors.length - 1].id, print: "full" };
   const pbox = QBox.create($("#productScene"), Object.assign({ print: "full", sector: pState.sector }, C.products[0].dims));
-  pbox.root.classList.add("qbox--tween");
   const pose = { rx: -20, ry: -34 };
   let lidOpen = 0;
 
@@ -299,22 +298,19 @@
   function fitScale(dims, w, h, fill) {
     return Math.min((w * fill) / (dims.w * 0.85 + dims.d * 0.75), (h * fill) / (dims.h + dims.d * 0.55));
   }
-  function productPose() {
-    const r = stageEl.getBoundingClientRect();
+  const spec = $(".spec");
+  // animate = false for the first paint and resizes; true when the user picks an option
+  function renderProduct(swap, animate = true) {
     const prod = C.products.find((p) => p.id === pState.type);
     const k = C.sizes.find((s) => s.id === pState.size).k;
     const d = { w: prod.dims.w * k, h: prod.dims.h * k, d: prod.dims.d * k };
+    const r = stageEl.getBoundingClientRect();
     // size change must stay visible → fit to the *medium* size, then apply k
-    const base = fitScale(prod.dims, r.width, r.height, 0.62);
-    pbox.set({ s: base * lerp(1, k, 0.55), rx: pose.rx, ry: pose.ry, ty: r.height * 0.04 });
-    return d;
-  }
-  const spec = $(".spec");
-  function renderProduct(swap) {
-    const prod = C.products.find((p) => p.id === pState.type);
-    const d = productPose();
-    pbox.setDims(d).setFeatures(prod.features).setPrint(pState.print).setSector(pState.print === "none" ? "none" : pState.sector);
-    pbox.fold(1, lidOpen);
+    const s = fitScale(prod.dims, r.width, r.height, 0.62) * lerp(1, k, 0.55);
+    pbox.setDims(d, !animate).setFeatures(prod.features).setPrint(pState.print).setSector(pState.print === "none" ? "none" : pState.sector);
+    const target = Object.assign({ w: d.w, h: d.h, d: d.d, s, ty: r.height * 0.04 }, pbox.foldParams(1, lidOpen));
+    if (!drag) Object.assign(target, { rx: pose.rx, ry: pose.ry });
+    if (animate && !RM) pbox.to(target); else pbox.set(target);
     const mm = (v) => Math.round(v * 1.6);
     $(".dims__w").textContent = `L ${mm(d.w)} MM`;
     $(".dims__h").textContent = `H ${mm(d.h)} MM`;
@@ -331,7 +327,8 @@
     else fill();
     [syncType, syncSize, syncSector, syncPrint].forEach((f) => f());
   }
-  renderProduct();
+  let drag = null;
+  renderProduct(false, false);
   // quote request for the configured model → prefilled email
   function quoteHref() {
     const prod = C.products.find((p) => p.id === pState.type);
@@ -348,17 +345,16 @@
   new IntersectionObserver((es, io) => {
     if (!es[0].isIntersecting) return;
     io.disconnect();
-    lidOpen = 1; pbox.fold(1, 1);
+    lidOpen = 1; pbox.to(pbox.foldParams(1, 1), 1100);
     explorer.classList.add("is-open");
-    setTimeout(() => { lidOpen = 0; pbox.fold(1, 0); }, RM ? 0 : 2600);
+    setTimeout(() => { lidOpen = 0; pbox.to(pbox.foldParams(1, 0), 1100); }, RM ? 0 : 2600);
   }, { threshold: 0.3 }).observe(stageEl);
   if (RM) explorer.classList.add("is-open");
 
   // drag to rotate
-  let drag = null;
   stageEl.addEventListener("pointerdown", (e) => {
     drag = { x: e.clientX, y: e.clientY, rx: pose.rx, ry: pose.ry, id: e.pointerId };
-    pbox.root.classList.add("qbox--drag");
+    pbox.release(["rx", "ry"]);
   });
   addEventListener("pointermove", (e) => {
     if (!drag || e.pointerId !== drag.id) return;
@@ -368,7 +364,7 @@
     pose.rx = clamp(drag.rx - dy * 0.25, -60, 15);
     pbox.set({ rx: pose.rx, ry: pose.ry });
   });
-  const endDrag = () => { if (drag) { drag = null; pbox.root.classList.remove("qbox--drag"); } };
+  const endDrag = () => { drag = null; };
   addEventListener("pointerup", endDrag);
   addEventListener("pointercancel", endDrag);
 
@@ -381,7 +377,7 @@
     rt = setTimeout(() => {
       vw = innerWidth; vh = innerHeight;
       heroLayout();
-      renderProduct();
+      renderProduct(false, false);
       scrubbers.forEach((s) => { s.last = -1; if (s.active) s.update(s.cur); });
     }, 120);
   });

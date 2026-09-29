@@ -99,9 +99,9 @@
         }
         return box;
       },
-      setDims(d) {
+      setDims(d, instant = true) {
         box.dims = Object.assign({}, box.dims, d);
-        box.set({ w: box.dims.w, h: box.dims.h, d: box.dims.d });
+        if (instant) box.set({ w: box.dims.w, h: box.dims.h, d: box.dims.d });
         const mm = (v) => Math.round(v * 1.6);
         const txt = `${mm(box.dims.w)} × ${mm(box.dims.d)} × ${mm(box.dims.h)} MM`;
         root.querySelectorAll(".pr-code").forEach((n) => (n.textContent = "QPACK · " + txt));
@@ -121,23 +121,54 @@
         ["handles", "window", "open", "lowfront"].forEach((f) => root.classList.toggle("f-" + f, list.includes(f)));
         return box;
       },
-      /** fold everything by a single 0..1 amount (convenience) */
-      fold(t, lid) {
+      /** fold angles for a single 0..1 amount (+ optional open lid) */
+      foldParams(t, lid) {
         const c = (x) => Math.max(0, Math.min(1, x));
         const side = c(t / 0.6);
         const minor = c((t - 0.55) / 0.2);
         const major = c((t - 0.72) / 0.28);
         const open = lid || 0;
-        return box.set({
+        return {
           f: side,
           aSide: side * 90,
           aTmin: minor * 91 - open * 150,
           aTmaj: major * 90 - open * 205,
           aBmin: -minor * 91,
           aBmaj: -major * 90,
-        });
+        };
+      },
+      fold(t, lid) {
+        return box.set(box.foldParams(t, lid));
+      },
+      /** Tween any numeric params together in one rAF loop. A new call starts
+          from wherever the box currently is, so rapid changes never jump. */
+      to(target, dur = 650) {
+        Object.assign(goal, target); // merge: an unfinished tween keeps its other targets
+        const from = {};
+        for (const k in goal) from[k] = state[k] == null ? goal[k] : state[k];
+        if (tween) cancelAnimationFrame(tween);
+        const t0 = performance.now();
+        const ease = (x) => 1 - Math.pow(1 - x, 3); // smooth, no overshoot
+        const step = (now) => {
+          const p = Math.min(1, (now - t0) / dur);
+          const e = ease(p);
+          const o = {};
+          for (const k in goal) o[k] = from[k] + (goal[k] - from[k]) * e;
+          box.set(o);
+          if (p < 1) tween = requestAnimationFrame(step);
+          else { tween = 0; for (const k in goal) delete goal[k]; }
+        };
+        tween = requestAnimationFrame(step);
+        return box;
+      },
+      /** stop tweening some params (e.g. while the user drags the rotation) */
+      release(keys) {
+        keys.forEach((k) => delete goal[k]);
+        return box;
       },
     };
+    let tween = 0;
+    const goal = {};
 
     box.set({ g: 26, s: 1, rx: 0, ry: 0, rz: 0, tx: 0, ty: 0, print: 1, lines: 0, sep: 0, plyo: 0, waste: 0, shadow: 1 });
     box.setDims(opts);
