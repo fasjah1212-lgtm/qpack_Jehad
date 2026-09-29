@@ -1,8 +1,0 @@
-<!-- PLACEHOLDER WORDMARK — replace this file with the official QPACK logo (same filename). -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 56" role="img" aria-label="QPACK">
-  <g fill="none" stroke="#123E6B" stroke-width="3" stroke-linejoin="round">
-    <path d="M6 16 L26 6 L46 16 L46 40 L26 50 L6 40 Z"/>
-    <path d="M6 16 L26 26 L46 16 M26 26 V50" stroke-dasharray="3 3"/>
-  </g>
-  <text x="58" y="39" font-family="IBM Plex Sans, Arial, sans-serif" font-weight="700" font-size="30" letter-spacing="2" fill="#123E6B">QPACK</text>
-</svg>

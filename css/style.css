@@ -4,13 +4,12 @@
 
 /* ---------- Tokens ---------- */
 :root {
-  /* BRAND — placeholders until the official QPACK palette/logo is supplied.
-     Change only these two lines to re-skin the whole site. */
-  --brand: #123E6B;
-  --brand-2: #1F6FB2;
+  /* BRAND — official QPACK copper (sampled from qpack.com.sa) */
+  --brand: #BB8546;
+  --brand-2: #8E5F2C;
 
   /* die-line / signal accent (used sparingly: cut lines, blade, focus) */
-  --signal: #E4572E;
+  --signal: #D7924A;
 
   /* neutrals — paper, boards, industry */
   --paper: #F3F1EC;
@@ -98,7 +97,7 @@ p { margin: 0; }
 /* ---------- Printed-heading reveal ---------- */
 .print-in {
   clip-path: inset(0 0 0 100%);
-  text-shadow: 4px 0 rgba(31,111,178,.35), -4px 0 rgba(228,87,46,.28);
+  text-shadow: 4px 0 rgba(187,133,70,.4), -4px 0 rgba(142,95,44,.3);
   transition: clip-path 1.3s var(--ease-heavy), text-shadow 1.6s .5s var(--ease-heavy);
 }
 .print-in.is-printed { clip-path: inset(0 0 0 0); text-shadow: 0 0 transparent, 0 0 transparent; }
@@ -126,31 +125,6 @@ p { margin: 0; }
 .btn--sm { min-height: 40px; padding: 0 18px; font-size: 14px; }
 .btn[hidden] { display: none; }
 
-/* ---------- Custom cursor (fine pointers only) ---------- */
-.cursor { position: fixed; left: 0; top: 0; z-index: 90; pointer-events: none; opacity: 0; transition: opacity .3s; }
-.has-cursor .cursor { opacity: 1; }
-.has-cursor, .has-cursor a, .has-cursor button { cursor: none; }
-.has-cursor input, .has-cursor textarea { cursor: text; }
-.cursor__dot, .cursor__ring { position: absolute; left: 0; top: 0; border-radius: 50%; }
-.cursor__dot { width: 4px; height: 4px; margin: -2px; background: var(--signal); }
-.cursor__ring {
-  width: 30px; height: 30px; margin: -15px; border: 1px solid var(--ink);
-  transition: width .45s var(--ease-heavy), height .45s var(--ease-heavy), margin .45s var(--ease-heavy), border-color .3s, background .3s;
-}
-.cursor__ring::before, .cursor__ring::after { content: ""; position: absolute; background: var(--ink); }
-.cursor__ring::before { left: 50%; top: -6px; bottom: -6px; width: 1px; transform: translateX(-.5px); clip-path: polygon(0 0,100% 0,100% 9px,0 9px,0 calc(100% - 9px),100% calc(100% - 9px),100% 100%,0 100%); }
-.cursor__ring::after { top: 50%; left: -6px; right: -6px; height: 1px; transform: translateY(-.5px); clip-path: polygon(0 0,9px 0,9px 100%,0 100%,0 0,100% 0,100% 100%,calc(100% - 9px) 100%,calc(100% - 9px) 0,100% 0); }
-.cursor__label {
-  position: absolute; left: 22px; top: 18px; white-space: nowrap;
-  font: 500 10px/1 var(--f-mono); letter-spacing: .14em; text-transform: uppercase;
-  color: var(--paper); background: var(--ink); padding: 5px 7px; opacity: 0; transform: translateY(4px);
-  transition: opacity .3s, transform .45s var(--ease-heavy);
-}
-.cursor.is-label .cursor__ring { width: 58px; height: 58px; margin: -29px; }
-.cursor.is-label .cursor__label { opacity: 1; transform: none; }
-.cursor.on-dark .cursor__ring { border-color: var(--paper); }
-.cursor.on-dark .cursor__ring::before, .cursor.on-dark .cursor__ring::after { background: var(--paper); }
-
 /* ---------- Header ---------- */
 .hdr {
   position: fixed; inset: 0 0 auto 0; z-index: 50; height: var(--hdr);
@@ -159,7 +133,7 @@ p { margin: 0; }
   -webkit-backdrop-filter: blur(14px) saturate(1.2); backdrop-filter: blur(14px) saturate(1.2);
   border-bottom: 1px solid var(--line);
 }
-.hdr__logo img { height: 34px; width: auto; }
+.hdr__logo img { height: 50px; width: auto; }
 .hdr__nav { display: flex; gap: 26px; margin-inline-start: auto; font-size: 15px; }
 .hdr__nav a { text-decoration: none; position: relative; padding: 6px 0; color: var(--gray); }
 .hdr__nav a::after { content: ""; position: absolute; inset: auto 0 0 0; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: right; transition: transform .5s var(--ease-heavy); }
@@ -252,7 +226,8 @@ p { margin: 0; }
 
 /* print layer */
 .qbox .pr { position: absolute; inset: 0; opacity: var(--print); display: grid; place-items: center; padding: 10%; color: var(--brand); }
-.qbox .pr-logo { width: 58%; max-width: 190px; opacity: .92; }
+.qbox .pr-logo { width: 58%; max-width: 190px; }
+.qbox:not([data-print="full"]) .pr-logo { filter: brightness(.42) saturate(1.3); }
 .qbox .pr-band { position: absolute; inset: auto 0 0 0; height: 4%; background: var(--brand); }
 .qbox .pr-code { position: absolute; bottom: 9%; inset-inline-end: 7%; font-size: 7px; letter-spacing: .1em; color: var(--brand); opacity: .75; direction: ltr; }
 .qbox .pr-sector { position: absolute; top: 8%; inset-inline-start: 7%; width: 16%; max-width: 40px; }
@@ -366,7 +341,7 @@ p { margin: 0; }
 /* machine heads sweeping over the sheet */
 .machine { position: absolute; top: 12%; bottom: 12%; width: 2px; left: 0; opacity: 0; pointer-events: none; z-index: 2; }
 .machine i { position: absolute; inset: 0; }
-.machine--cut i { background: var(--signal); box-shadow: 0 0 16px 2px rgba(228,87,46,.55); }
+.machine--cut i { background: var(--signal); box-shadow: 0 0 16px 2px rgba(215,146,74,.55); }
 .machine--cut::before, .machine--print::before { content: ""; position: absolute; top: -14px; left: -9px; width: 20px; height: 12px; background: var(--ink); }
 .machine--print { width: 16px; }
 .machine--print i { background: linear-gradient(90deg, var(--brand) 0 25%, var(--brand-2) 25% 50%, var(--signal) 50% 75%, var(--ink) 75%); opacity: .8; }
@@ -495,7 +470,7 @@ p { margin: 0; }
 .sscene__word { position: absolute; bottom: -2vw; left: 50%; transform: translateX(-50%); font: 900 clamp(90px, 19vw, 300px)/1 var(--f-lat); letter-spacing: -.03em; color: transparent; -webkit-text-stroke: 1.2px currentColor; opacity: .16; white-space: nowrap; direction: ltr; }
 .sscene__pattern { position: absolute; inset: 0; opacity: .5; }
 .sscene--food { background: #EFE7DA; color: #8C6A45; }
-.sscene--beverage { background: #E5EBF0; color: var(--brand); }
+.sscene--beverage { background: #F1ECE4; color: var(--brand-2); }
 .sscene--industry { background: #D9DBDD; color: var(--gray); }
 .scene--sector { position: absolute; inset: 0; z-index: 2; }
 .sectors__list { position: absolute; z-index: 3; inset-inline-start: var(--gut); bottom: 8vh; margin: 0; padding: 0; list-style: none; display: grid; gap: 4px; }
@@ -507,7 +482,7 @@ p { margin: 0; }
 .cutter { height: 170vh; position: relative; background: #D9DBDD; }
 .cutter__sticky { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
 .cutter__top { position: absolute; inset: 0; background: #16181B; clip-path: inset(0 0 calc(100% - var(--p, 0) * 100%) 0); }
-.cutter__blade { position: absolute; left: 0; right: 0; top: calc(var(--p, 0) * 100%); height: 2px; background: var(--signal); box-shadow: 0 0 22px 3px rgba(228,87,46,.55); }
+.cutter__blade { position: absolute; left: 0; right: 0; top: calc(var(--p, 0) * 100%); height: 2px; background: var(--signal); box-shadow: 0 0 22px 3px rgba(215,146,74,.55); }
 .cutter__blade span { position: absolute; top: 10px; inset-inline-end: var(--gut); color: var(--signal); }
 .cutter__blade::before { content: ""; position: absolute; top: -9px; left: calc(var(--p, 0) * 80% + 5%); width: 34px; height: 18px; background: var(--ink); border: 1px solid var(--signal); }
 
@@ -516,7 +491,7 @@ p { margin: 0; }
    ========================================================================== */
 .quality { position: relative; height: 340vh; background: #16181B; color: var(--paper); }
 .quality__sticky { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; padding: calc(var(--hdr) + 36px) var(--gut) 30px; display: grid; grid-template-rows: auto 1fr auto; }
-.inspect { position: relative; color: #9FB4C8; min-height: 0; }
+.inspect { position: relative; color: #C9B79E; min-height: 0; }
 .inspect__svg { position: absolute; inset: 0; width: 100%; height: 100%; }
 .inspect__board { transition: transform .1s linear; }
 .inspect__measure path, .inspect__measure line { stroke: var(--signal); stroke-width: 1.2; fill: none; }
@@ -642,18 +617,18 @@ p { margin: 0; }
 /* ==========================================================================
    FOOTER — inside of an open box
    ========================================================================== */
-.ftr { position: relative; background: repeating-linear-gradient(90deg, rgba(60,40,15,.06) 0 1px, transparent 1px 7px), var(--kraft-in); color: #2B1E0E; }
+.ftr { position: relative; background: repeating-linear-gradient(90deg, rgba(60,35,10,.06) 0 1px, transparent 1px 7px), var(--brand); color: #fff; }
 .ftr__flaps { display: flex; justify-content: space-between; height: 0; }
-.ftr__flaps i { position: relative; top: -1px; width: 38%; height: 44px; border: 1.5px dashed rgba(43,30,14,.5); border-top: 0; clip-path: polygon(0 0, 100% 0, 92% 100%, 8% 100%); background: rgba(43,30,14,.06); }
+.ftr__flaps i { position: relative; top: -1px; width: 38%; height: 44px; border: 1.5px dashed rgba(255,255,255,.45); border-top: 0; clip-path: polygon(0 0, 100% 0, 92% 100%, 8% 100%); background: rgba(60,35,10,.1); }
 .ftr__in { max-width: var(--maxw); margin: 0 auto; padding: 90px var(--gut) 34px; display: grid; grid-template-columns: auto 1fr auto; gap: 26px 40px; align-items: center; }
-.ftr__logo { height: 34px; width: auto; mix-blend-mode: multiply; }
+.ftr__logo { height: 64px; width: auto; }
 .ftr__nav { display: flex; flex-wrap: wrap; gap: 8px 24px; font-size: 15px; }
 .ftr__nav a, .ftr__social a { text-decoration: none; }
 .ftr__nav a:hover, .ftr__social a:hover { text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 5px; }
 .ftr__social { display: flex; gap: 20px; font-size: 15px; }
-.ftr__contact { grid-column: 1 / 3; color: rgba(43,30,14,.75); font-size: 11px; display: flex; flex-wrap: wrap; gap: 6px 26px; text-transform: none; }
+.ftr__contact { grid-column: 1 / 3; color: rgba(255,255,255,.85); font-size: 11px; display: flex; flex-wrap: wrap; gap: 6px 26px; text-transform: none; }
 .ftr__contact a { text-decoration: none; direction: ltr; }
-.ftr__copy { color: rgba(43,30,14,.6); font-size: 11px; text-transform: none; }
+.ftr__copy { color: rgba(255,255,255,.75); font-size: 11px; text-transform: none; }
 
 .noscript { padding: 120px 24px; text-align: center; }
 

@@ -49,7 +49,7 @@
     return p;
   }
 
-  const logo = '<img class="pr-logo" src="assets/logo.svg" alt="" draggable="false">';
+  const logo = '<img class="pr-logo" src="assets/logo.png" alt="" draggable="false">';
 
   function create(mount, opts) {
     opts = Object.assign({ w: 240, h: 190, d: 160, plies: false, print: "full", sector: "none", features: [] }, opts || {});

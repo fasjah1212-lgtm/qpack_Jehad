@@ -280,9 +280,9 @@
   const pose = { rx: -20, ry: -34 };
   let lidOpen = 0;
 
-  function chips(mount, list, key, label, onPick, cursor) {
+  function chips(mount, list, key, label, onPick) {
     mount.innerHTML = list.map((it, k) =>
-      `<button type="button" class="chip" style="--k:${k}" data-v="${it.id}" aria-pressed="false"${cursor ? ` data-cursor="${cursor}"` : ""}>${esc(label(it))}${badge(it)}</button>`).join("");
+      `<button type="button" class="chip" style="--k:${k}" data-v="${it.id}" aria-pressed="false">${esc(label(it))}${badge(it)}</button>`).join("");
     mount.addEventListener("click", (e) => {
       const b = e.target.closest(".chip");
       if (!b) return;
@@ -290,10 +290,10 @@
     });
     return () => $$(".chip", mount).forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === key()));
   }
-  const syncType = chips($("#pickType"), C.products, () => pState.type, (p) => p.name, (v) => { pState.type = v; renderProduct(true); }, "Explore");
-  const syncSize = chips($("#pickSize"), C.sizes, () => pState.size, (s) => s.label, (v) => { pState.size = v; renderProduct(); }, "Explore");
-  const syncSector = chips($("#pickSector"), C.sectors, () => pState.sector, (s) => s.name, (v) => { pState.sector = v; renderProduct(); }, "Explore");
-  const syncPrint = chips($("#pickPrint"), C.prints, () => pState.print, (s) => s.label, (v) => { pState.print = v; renderProduct(); }, "Explore");
+  const syncType = chips($("#pickType"), C.products, () => pState.type, (p) => p.name, (v) => { pState.type = v; renderProduct(true); });
+  const syncSize = chips($("#pickSize"), C.sizes, () => pState.size, (s) => s.label, (v) => { pState.size = v; renderProduct(); });
+  const syncSector = chips($("#pickSector"), C.sectors, () => pState.sector, (s) => s.name, (v) => { pState.sector = v; renderProduct(); });
+  const syncPrint = chips($("#pickPrint"), C.prints, () => pState.print, (s) => s.label, (v) => { pState.print = v; renderProduct(); });
 
   function fitScale(dims, w, h, fill) {
     return Math.min((w * fill) / (dims.w * 0.85 + dims.d * 0.75), (h * fill) / (dims.h + dims.d * 0.55));
@@ -366,7 +366,7 @@
      ------------------------------------------------------------------ */
   const scenesEl = $(".sectors__scenes");
   const iconInner = (s) => (QBox.ICONS[s] || "").replace(/^<svg[^>]*>|<\/svg>$/g, "");
-  const PATTERN_COLOR = { food: "#8C6A45", beverage: "#123E6B", industry: "#24272B" };
+  const PATTERN_COLOR = { food: "#8C6A45", beverage: "#8E5F2C", industry: "#24272B" };
   scenesEl.innerHTML = C.sectors.map((s, i) => {
     const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='150' height='150' viewBox='0 0 150 150'><g transform='translate(51 51)' fill='none' stroke='${PATTERN_COLOR[s.scene]}' stroke-opacity='.35' stroke-width='1.4' stroke-linejoin='round' stroke-linecap='round'>${iconInner(s.scene)}</g></svg>`;
     return `<div class="sscene sscene--${s.scene}${i === 0 ? " is-on" : ""}">
@@ -423,9 +423,9 @@
         <text x="60" y="274" font-size="6">h</text>
         <circle cx="500" cy="270" r="30" pathLength="1" fill="none"/>
       </g>
-      <text x="16" y="194" font-size="7" fill="#9FB4C8" font-family="IBM Plex Mono">LINER</text>
-      <text x="16" y="352" font-size="7" fill="#9FB4C8" font-family="IBM Plex Mono">LINER</text>
-      <text x="16" y="274" font-size="7" fill="#9FB4C8" font-family="IBM Plex Mono">FLUTE</text>`;
+      <text x="16" y="194" font-size="7" fill="#C9B79E" font-family="IBM Plex Mono">LINER</text>
+      <text x="16" y="352" font-size="7" fill="#C9B79E" font-family="IBM Plex Mono">LINER</text>
+      <text x="16" y="274" font-size="7" fill="#C9B79E" font-family="IBM Plex Mono">FLUTE</text>`;
   })();
   const measureG = $(".inspect__measure", board);
   $$("path, circle", measureG).forEach((p) => { p.style.strokeDasharray = "1"; p.style.strokeDashoffset = "1"; p.style.strokeWidth = ".6"; });
@@ -607,33 +607,6 @@
     fCopy.style.transform = mob ? `translateY(${(1 - seg(p, 0.45, 0.75)) * 30}px)` : `translateY(calc(-50% + ${(1 - seg(p, 0.45, 0.75)) * 30}px))`;
   }
   if (RM) finaleUpdate(1); else { finaleUpdate(0); scrub($(".finale__pin"), finaleUpdate, { k: 0.07 }); }
-
-  /* ------------------------------------------------------------------
-     Cursor — desktop only
-     ------------------------------------------------------------------ */
-  if (FINE && !RM) {
-    document.body.classList.add("has-cursor");
-    const cur = $(".cursor"), dot = $(".cursor__dot"), ring = $(".cursor__ring"), lbl = $(".cursor__label");
-    let mx = -100, my = -100, rx = -100, ry = -100, labelNow = "";
-    addEventListener("mousemove", (e) => {
-      mx = e.clientX; my = e.clientY;
-      const t = e.target.closest ? e.target : null;
-      const hit = t && t.closest("[data-cursor]");
-      const l = hit ? hit.dataset.cursor : "";
-      if (l !== labelNow) { labelNow = l; lbl.textContent = l; cur.classList.toggle("is-label", !!l); }
-      cur.classList.toggle("on-dark", !!(t && t.closest(".products, .quality")));
-    }, { passive: true });
-    document.addEventListener("mouseleave", () => { mx = my = -100; });
-    (function loop() {
-      rx += (mx - rx) * 0.2; ry += (my - ry) * 0.2;
-      dot.style.transform = `translate(${mx}px, ${my}px)`;
-      ring.style.transform = `translate(${rx}px, ${ry}px)`;
-      lbl.style.transform = `translate(${rx}px, ${ry}px)`;
-      requestAnimationFrame(loop);
-    })();
-    // label sits relative to the ring position
-    lbl.style.transition = "opacity .3s";
-  }
 
   /* ------------------------------------------------------------------
      Resize
