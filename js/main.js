@@ -77,6 +77,13 @@
     burger.setAttribute("aria-expanded", open);
   });
   $$(".hdr__nav a").forEach((a) => a.addEventListener("click", () => { hdr.classList.remove("is-open"); burger.setAttribute("aria-expanded", "false"); }));
+  // logo → back to the very top (the header is fixed, so "#top" alone never scrolls)
+  $(".hdr__logo").addEventListener("click", (e) => {
+    e.preventDefault();
+    hdr.classList.remove("is-open");
+    burger.setAttribute("aria-expanded", "false");
+    window.scrollTo({ top: 0, behavior: RM ? "auto" : "smooth" });
+  });
   let lastSp = -1;
   function headerProgress() {
     const sp = clamp(scrollY / Math.max(1, document.body.scrollHeight - vh));
