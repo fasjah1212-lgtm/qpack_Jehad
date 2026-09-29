@@ -464,8 +464,8 @@ p { margin: 0; }
 .ftr__contact a { direction: ltr; }
 .ftr__bottom { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; gap: var(--s-4); padding-top: var(--s-4); border-top: 1px dashed rgba(255,255,255,.35); }
 .ftr__copy { font-size: var(--fs-small); color: rgba(255,255,255,.85); }
-.ftr__sign { font-size: 12px; color: rgba(255,255,255,.75); direction: ltr; letter-spacing: .04em; }
-.ftr__sign b { font-weight: 700; color: #fff; }
+.ftr__sign { height: 34px; width: auto; opacity: .85; transition: opacity .3s; }
+.ftr__sign:hover { opacity: 1; }
 
 .noscript { padding: 120px 24px; text-align: center; }
 
