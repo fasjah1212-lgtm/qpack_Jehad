@@ -395,7 +395,7 @@ p { margin: 0; }
 }
 
 /* ---------- Products ---------- */
-.products { position: relative; background: var(--dark); color: var(--on-dark); padding-bottom: var(--s-10); overflow: hidden; }
+.products { position: relative; background: var(--dark); color: var(--on-dark); padding-bottom: var(--s-10); overflow: clip; }
 .products::before { content: ""; position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(255,255,255,.03) 0 1px, transparent 1px 56px); }
 .products .sec-head { padding-top: var(--s-8); position: relative; }
 .explorer { position: relative; display: grid; grid-template-columns: 1.2fr 1fr; gap: var(--s-7); max-width: var(--maxw); margin: 0 auto; padding: 0 var(--gut); align-items: start; }
@@ -515,9 +515,24 @@ p { margin: 0; }
   .vmv { grid-template-columns: 1fr; padding-bottom: var(--s-8); }
   .flapfold { height: 36vh; }
 
-  .explorer { grid-template-columns: 1fr; gap: var(--s-5); }
-  .explorer__stage { position: relative; top: 0; height: 52vh; min-height: 340px; }
+  /* mobile explorer: box pinned under the header, options scroll beneath it */
+  .explorer { grid-template-columns: minmax(0, 1fr); gap: var(--s-4); padding: 0; }
+  .explorer > * { min-width: 0; }
+  .explorer__stage {
+    position: sticky; top: var(--hdr); z-index: 2; height: 40vh; height: 40svh; min-height: 260px;
+    background: var(--dark); border-bottom: 1px solid var(--line-dark);
+  }
+  .explorer__stage::before { inset: 6% 4%; }
+  .explorer__drag { bottom: 6px; }
   .dims { display: none; }
+  .explorer__panel { grid-template-columns: minmax(0, 1fr); gap: var(--s-4); padding: 0 var(--gut); }
+  .picker__l { margin-bottom: var(--s-2); }
+  .explorer__panel .chips {
+    flex-wrap: nowrap; overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: none;
+    margin: 0 calc(var(--gut) * -1); padding: 2px var(--gut) 4px;
+  }
+  .explorer__panel .chips::-webkit-scrollbar { display: none; }
+  .explorer__panel .chip { flex: none; scroll-snap-align: start; white-space: nowrap; padding: 11px 14px; }
 
   .story__grid, .news__list { grid-template-columns: 1fr; }
 
