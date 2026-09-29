@@ -109,10 +109,10 @@
   $("[data-company='intro']").textContent = C.company.intro;
 
   // vision / mission / values
-  $$(".vmv__card").forEach((card) => {
+  $$(".vmv .card").forEach((card) => {
     const d = C[card.dataset.k];
-    $("h3", card).textContent = d.title;
-    $("p", card).textContent = d.text;
+    $(".t-h3", card).textContent = d.title;
+    $(".t-body", card).textContent = d.text;
   });
 
   // careers
@@ -234,7 +234,8 @@
   else scrub($("#journey"), heroUpdate, { k: 0.075 });
 
   /* ------------------------------------------------------------------
-     06  ABOUT — board splits into five plies, each tells a part
+     ABOUT — a static stack of five boards; each board is one part of the story.
+     Hovering an item highlights its board (no scroll animation).
      ------------------------------------------------------------------ */
   const stackRig = document.createElement("div");
   stackRig.className = "stack__rig";
@@ -250,29 +251,20 @@
   plates.slice().reverse().forEach((p) => stackRig.appendChild(p)); // bottom → top in DOM
   $(".stack").appendChild(stackRig);
   $(".layers").innerHTML = C.layers.map((L, k) => `
-    <article class="layer" role="listitem">
-      <div class="layer__h"><p class="label">0${k + 1} — ${esc(L.en)}</p><h3 class="t-h1">${esc(L.title)}</h3></div>
-      <p class="t-lead">${esc(L.text)}</p>
-      <div class="layer__idx">${C.layers.map((_, j) => `<i class="${j === k ? "is-on" : ""}"></i>`).join("")}</div>
+    <article class="layer" role="listitem" tabindex="0">
+      <span class="layer__no">0${k + 1}</span>
+      <div><h3 class="t-h3">${esc(L.title)}</h3><p class="t-body">${esc(L.text)}</p></div>
     </article>`).join("");
   const layerEls = $$(".layer");
-  let aboutIdx = -1;
-  function aboutUpdate(p) {
-    const sep = ease(seg(p, 0.02, 0.2));
-    stackRig.style.setProperty("--sep", sep.toFixed(4));
-    const idx = Math.min(n - 1, Math.floor(seg(p, 0.12, 0.98) * n));
-    if (idx !== aboutIdx) {
-      aboutIdx = idx;
-      plates.forEach((pl, k) => { pl.classList.toggle("is-on", k === idx); pl.style.setProperty("--lift", k === idx ? 1 : 0); });
-      layerEls.forEach((l, k) => l.classList.toggle("is-on", k === idx));
-    }
-  }
-  const aboutStatic = () => { stackRig.style.setProperty("--sep", 1); plates.forEach((pl) => pl.classList.remove("is-on")); layerEls.forEach((l) => l.classList.add("is-on")); aboutIdx = -1; };
-  if (RM) aboutStatic();
-  else {
-    aboutUpdate(0);
-    scrub($(".about__pin"), aboutUpdate, { enabled: () => !mqMobile.matches });
-  }
+  const highlight = (idx) => {
+    plates.forEach((pl, k) => pl.classList.toggle("is-on", k === idx));
+    layerEls.forEach((l, k) => l.classList.toggle("is-on", k === idx));
+  };
+  layerEls.forEach((l, k) => {
+    l.addEventListener("mouseenter", () => highlight(k));
+    l.addEventListener("focus", () => highlight(k));
+  });
+  $(".layers").addEventListener("mouseleave", () => highlight(-1));
 
   // page-as-flap
   const flap = $(".flapfold");
@@ -391,10 +383,8 @@
       heroLayout();
       renderProduct();
       scrubbers.forEach((s) => { s.last = -1; if (s.active) s.update(s.cur); });
-      if (mqMobile.matches) aboutStatic();
     }, 120);
   });
-  if (mqMobile.matches) aboutStatic();
 
   requestAnimationFrame(frame);
 })();
