@@ -18,7 +18,6 @@
   const root = document.documentElement;
   const RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const mqMobile = matchMedia("(max-width: 900px)");
-  const FINE = matchMedia("(hover: hover) and (pointer: fine)").matches;
   let vw = innerWidth, vh = innerHeight;
 
   if (RM) document.body.classList.add("rm");
@@ -82,7 +81,7 @@
     const a = navMap.get(e.target.id);
     if (a) a.classList.add("is-on");
   }), { rootMargin: "-45% 0px -50% 0px" });
-  ["about", "products", "sectors", "quality", "story", "contact"].forEach((id) => navIO.observe(document.getElementById(id)));
+  ["about", "products", "story", "contact"].forEach((id) => navIO.observe(document.getElementById(id)));
 
   /* ------------------------------------------------------------------
      Reveal: section flaps + printed headings
@@ -94,7 +93,7 @@
     $$(".print-in", e.target).forEach((h) => h.classList.add("is-printed"));
     revealIO.unobserve(e.target);
   }), { threshold: 0.35 });
-  new Set($$(".print-in").map((h) => h.parentElement).concat($$(".sec-tab"))).forEach((n) => revealIO.observe(n));
+  new Set($$(".print-in").map((h) => h.parentElement)).forEach((n) => revealIO.observe(n));
 
   /* ------------------------------------------------------------------
      Content injection (single source: js/content.js)
@@ -116,7 +115,11 @@
 
   // news
   $(".news__list").innerHTML = C.news.map((n) =>
-    `<article class="nitem surface"><span class="mono">${esc(n.source)}</span><h3>${esc(n.title)}</h3><p>${esc(n.text)}</p></article>`).join("");
+    `<article class="nitem card"><p class="label label--brand">خبر</p><h3 class="t-h3">${esc(n.title)}</h3><p class="t-body">${esc(n.text)}</p></article>`).join("");
+
+  // official milestones strip (hero)
+  $(".facts").innerHTML = C.timeline.map((t) =>
+    `<li class="fact"><b class="fact__mark">${esc(t.mark)}</b><span class="fact__t">${esc(t.title)}</span><span class="fact__d">${esc(t.text)}</span></li>`).join("");
 
   // contact
   const ct = C.contact;
@@ -126,7 +129,7 @@
   $("#cLines").innerHTML = ct.lines.map((l) => `<li><span>${esc(l.label)}</span><a href="tel:${l.tel}">${esc(l.display)}</a></li>`).join("");
 
   // footer
-  $("#fSocial").innerHTML = C.social.map((s) => `<a href="${s.url}" target="_blank" rel="noopener">${esc(s.name)} <span class="mono">${esc(s.handle)}</span></a>`).join("");
+  $("#fSocial").innerHTML = C.social.map((s) => `<a href="${s.url}" target="_blank" rel="noopener">${esc(s.name)} <span>${esc(s.handle)}</span></a>`).join("");
   $("#fContact").innerHTML =
     `<span>${esc(ct.address)}</span><a href="tel:${ct.main.tel}">${esc(ct.main.display)}</a><a href="mailto:${ct.email}">${esc(ct.email)}</a>`;
   $("#year").textContent = new Date().getFullYear();
@@ -153,7 +156,7 @@
   const stages = $$(".stage");
   const railItems = $$(".rail span");
   const mCut = $(".machine--cut"), mPrint = $(".machine--print");
-  const coords = $$(".journey__coords span");
+  const facts = $(".facts");
   let HL = {};
   function heroLayout() {
     const mob = mqMobile.matches;
@@ -163,7 +166,7 @@
       flatS: mob ? Math.min((vw * 0.94) / netW, 0.62) : Math.min((vw * 0.44) / netW, 0.9),
       boxS: mob ? Math.min((vw * 0.62) / (HB.w + HB.d * 0.8), 1) : clamp((vh * 0.5) / 300, 0.8, 1.45),
       tx: mob ? 0 : -vw * 0.19,
-      ty: mob ? vh * 0.1 : vh * 0.02,
+      ty: mob ? vh * 0.19 : vh * 0.02,
       netW,
     };
   }
@@ -174,6 +177,8 @@
     heroText.style.opacity = 1 - out;
     heroText.style.transform = HL.mob ? `translateY(${-30 * out}px)` : `translateY(calc(-46% - ${40 * out}px))`;
     heroText.style.visibility = out >= 1 ? "hidden" : "visible";
+    facts.style.opacity = 1 - out;
+    facts.style.visibility = out >= 1 ? "hidden" : "visible";
 
     const fold = seg(p, 0.58, 0.84);
     const ef = ease(fold);
@@ -214,10 +219,6 @@
       railItems.forEach((r, i) => r.classList.toggle("is-on", i + 1 <= st));
       $("#journey").classList.toggle("is-building", st > 0);
     }
-    if (coords.length) {
-      coords[0].textContent = "X " + (fold * 90).toFixed(1).padStart(5, "0") + "°";
-      coords[1].textContent = "Y " + (p * 100).toFixed(1).padStart(5, "0") + "%";
-    }
   }
   heroUpdate(0);
   requestAnimationFrame(() => $(".journey__hero h1").classList.add("is-printed"));
@@ -242,8 +243,8 @@
   $(".stack").appendChild(stackRig);
   $(".layers").innerHTML = C.layers.map((L, k) => `
     <article class="layer" role="listitem">
-      <div class="layer__h"><span class="mono">0${k + 1} / ${esc(L.en)}</span><h3>${esc(L.title)}</h3></div>
-      <p>${esc(L.text)}</p>
+      <div class="layer__h"><p class="label">0${k + 1} — ${esc(L.en)}</p><h3 class="t-h1">${esc(L.title)}</h3></div>
+      <p class="t-lead">${esc(L.text)}</p>
       <div class="layer__idx">${C.layers.map((_, j) => `<i class="${j === k ? "is-on" : ""}"></i>`).join("")}</div>
     </article>`).join("");
   const layerEls = $$(".layer");
@@ -331,7 +332,17 @@
     [syncType, syncSize, syncSector, syncPrint].forEach((f) => f());
   }
   renderProduct();
-  $("#specCta").addEventListener("click", () => wizard.preset(pState.type, pState.print));
+  // quote request for the configured model → prefilled email
+  function quoteHref() {
+    const prod = C.products.find((p) => p.id === pState.type);
+    const size = C.sizes.find((x) => x.id === pState.size);
+    const sec = C.sectors.find((x) => x.id === pState.sector);
+    const pr = C.prints.find((x) => x.id === pState.print);
+    const body = ["طلب عرض سعر — عبر الموقع", "", "نوع الصندوق: " + prod.name, "الحجم: " + size.label,
+      "القطاع: " + sec.name, "الطباعة: " + pr.label, "الكمية المطلوبة: ", "", "الاسم: ", "الشركة: ", "الجوال: "].join("\n");
+    return `mailto:${C.contact.email}?subject=${encodeURIComponent("طلب عرض سعر — " + prod.name)}&body=${encodeURIComponent(body)}`;
+  }
+  $("#specCta").addEventListener("click", (e) => { e.currentTarget.href = quoteHref(); });
 
   // the reveal: lid opens, categories rise out of the box, lid closes
   new IntersectionObserver((es, io) => {
@@ -362,253 +373,6 @@
   addEventListener("pointercancel", endDrag);
 
   /* ------------------------------------------------------------------
-     08  SECTORS — same finished box, the world around it changes
-     ------------------------------------------------------------------ */
-  const scenesEl = $(".sectors__scenes");
-  const iconInner = (s) => (QBox.ICONS[s] || "").replace(/^<svg[^>]*>|<\/svg>$/g, "");
-  const PATTERN_COLOR = { food: "#8C6A45", beverage: "#8E5F2C", industry: "#24272B" };
-  scenesEl.innerHTML = C.sectors.map((s, i) => {
-    const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='150' height='150' viewBox='0 0 150 150'><g transform='translate(51 51)' fill='none' stroke='${PATTERN_COLOR[s.scene]}' stroke-opacity='.35' stroke-width='1.4' stroke-linejoin='round' stroke-linecap='round'>${iconInner(s.scene)}</g></svg>`;
-    return `<div class="sscene sscene--${s.scene}${i === 0 ? " is-on" : ""}">
-      <div class="sscene__pattern" style="background-image:url(&quot;data:image/svg+xml,${encodeURIComponent(svg)}&quot;)"></div>
-      <div class="sscene__word">${esc(s.en.toUpperCase())}</div></div>`;
-  }).join("");
-  $(".sectors__list").innerHTML = C.sectors.map((s, i) => `<li><span class="mono">0${i + 1}</span>${esc(s.name)}${badge(s)}</li>`).join("");
-  const sScenes = $$(".sscene"), sItems = $$(".sectors__list li");
-  const sbox = QBox.create($("#sectorScene"), { w: 240, h: 190, d: 160, print: "full", sector: C.sectors[0].scene });
-  let sIdx = -1;
-  function sectorUpdate(p) {
-    const idx = Math.min(C.sectors.length - 1, Math.floor(seg(p, 0.05, 0.95) * C.sectors.length));
-    if (idx !== sIdx) {
-      sIdx = idx;
-      sScenes.forEach((s, i) => { s.classList.toggle("is-on", i === idx); s.classList.toggle("is-past", i < idx); });
-      sItems.forEach((s, i) => s.classList.toggle("is-on", i === idx));
-      sbox.setSector(C.sectors[idx].scene);
-    }
-    const mob = mqMobile.matches;
-    sbox.set({
-      s: mob ? Math.min(vw / 520, 0.95) : clamp(vh / 620, 0.8, 1.5),
-      rx: -18 + Math.sin(p * Math.PI) * -6,
-      ry: lerp(-60, 30, p),
-      tx: mob ? 0 : -vw * 0.1,
-      ty: mob ? -vh * 0.04 : vh * 0.02,
-    });
-  }
-  sectorUpdate(0);
-  if (RM) sectorUpdate(0.5); else scrub($(".sectors"), sectorUpdate, { k: 0.07 });
-
-  // cutter blade
-  const cutter = $(".cutter");
-  if (!RM) scrub(cutter, (p) => cutter.style.setProperty("--p", ease(seg(p, 0.05, 0.95)).toFixed(4)), { k: 0.1 });
-
-  /* ------------------------------------------------------------------
-     09  QUALITY — close-up, zoom into the flute, inspection pins
-     ------------------------------------------------------------------ */
-  const NS = "http://www.w3.org/2000/svg";
-  const board = $(".inspect__board");
-  (function drawBoard() {
-    let d = "M0 " + 270;
-    for (let x = 0; x <= 1000; x += 4) d += ` L${x} ${(270 - 57 * Math.cos((2 * Math.PI * x) / 80)).toFixed(1)}`;
-    board.innerHTML = `
-      <rect x="0" y="202" width="1000" height="11" fill="#C9A477"/>
-      <rect x="0" y="327" width="1000" height="11" fill="#C9A477"/>
-      <path d="${d}" fill="none" stroke="#B89063" stroke-width="5"/>
-      <path d="M0 207.5H1000M0 332.5H1000" stroke="#8a6639" stroke-width=".6" stroke-dasharray="2 5"/>
-      <g class="inspect__measure" style="--len:0">
-        <path d="M912 202V338M904 202H920M904 338H920" pathLength="1"/>
-        <text x="924" y="274" font-size="6">t</text>
-        <path d="M460 356H540M460 350V362M540 350V362" pathLength="1"/>
-        <text x="468" y="372" font-size="6">λ FLUTE PITCH</text>
-        <path d="M88 213V327M80 213H96M80 327H96" pathLength="1"/>
-        <text x="60" y="274" font-size="6">h</text>
-        <circle cx="500" cy="270" r="30" pathLength="1" fill="none"/>
-      </g>
-      <text x="16" y="194" font-size="7" fill="#C9B79E" font-family="IBM Plex Mono">LINER</text>
-      <text x="16" y="352" font-size="7" fill="#C9B79E" font-family="IBM Plex Mono">LINER</text>
-      <text x="16" y="274" font-size="7" fill="#C9B79E" font-family="IBM Plex Mono">FLUTE</text>`;
-  })();
-  const measureG = $(".inspect__measure", board);
-  $$("path, circle", measureG).forEach((p) => { p.style.strokeDasharray = "1"; p.style.strokeDashoffset = "1"; p.style.strokeWidth = ".6"; });
-  $$("text", measureG).forEach((t) => (t.style.fontSize = "7px"));
-  const PIN_POS = [
-    { x: 18, y: 18, s: "r" }, { x: 76, y: 16, s: "l" }, { x: 14, y: 50, s: "r" },
-    { x: 82, y: 48, s: "l" }, { x: 20, y: 76, s: "r" }, { x: 74, y: 78, s: "l" },
-  ];
-  $(".inspect__pins").innerHTML = C.quality.points.map((q, i) => {
-    const P = PIN_POS[i % PIN_POS.length];
-    return `<div class="pin pin--${P.s}" style="left:${P.x}%;top:${P.y}%;--len:56px"><i class="pin__dot"></i><i class="pin__lead"></i>
-      <div class="pin__card"><span class="mono">${esc(q.label)}</span><b>${esc(q.title)}</b><p>${esc(q.text)}</p></div></div>`;
-  }).join("");
-  const qlist = document.createElement("ul");
-  qlist.className = "qlist";
-  qlist.innerHTML = C.quality.points.map((q) => `<li><span class="mono">${esc(q.label)}</span>${esc(q.title)}</li>`).join("");
-  $(".quality__foot").before(qlist);
-  const pins = $$(".pin");
-  const inspectSvg = $(".inspect__svg");
-  const fitInspect = () => inspectSvg.setAttribute("preserveAspectRatio", mqMobile.matches ? "xMidYMid slice" : "xMidYMid meet");
-  fitInspect();
-  mqMobile.addEventListener("change", fitInspect);
-  function qualityUpdate(p) {
-    const z = ease(seg(p, 0, 0.35));
-    board.setAttribute("transform", `translate(500 270) scale(${lerp(1, 2.3, z)}) translate(-500 -270)`);
-    const m = seg(p, 0.3, 0.5);
-    $$("path, circle", measureG).forEach((el) => (el.style.strokeDashoffset = 1 - m));
-    measureG.style.opacity = m > 0 ? 1 : 0;
-    pins.forEach((pin, i) => pin.classList.toggle("is-on", p > 0.4 + i * 0.085));
-  }
-  if (RM) qualityUpdate(1); else { qualityUpdate(0); scrub($(".quality"), qualityUpdate, { k: 0.08 }); }
-
-  /* ------------------------------------------------------------------
-     10  STORY — paper roll unrolls with the official milestones
-     ------------------------------------------------------------------ */
-  $(".roll__track").innerHTML = C.timeline.map((t) =>
-    `<article class="tl"><span class="tl__mark">${esc(t.mark)}</span><h3>${esc(t.title)}</h3><p>${esc(t.text)}</p><span class="mono">SOURCE: ${esc(t.source)}</span></article>`).join("");
-  const roll = $(".roll");
-  if (!RM) scrub(roll, (p) => roll.style.setProperty("--p", ease(seg(p, 0.04, 0.8)).toFixed(4)), { enabled: () => !mqMobile.matches, k: 0.08 });
-  else roll.style.setProperty("--p", 1);
-
-  /* ------------------------------------------------------------------
-     11  QUOTE WIZARD — the journey continues into an order
-     ------------------------------------------------------------------ */
-  const QTY = ["أقل من 1,000", "1,000 – 5,000", "5,000 – 20,000", "20,000 – 50,000", "50,000 – 100,000", "أكثر من 100,000"];
-  const form = $(".wizard__form");
-  const steps = $$(".wstep", form);
-  const stepLabels = $$(".wizard__steps li");
-  const btnPrev = $("[data-w='prev']", form), btnNext = $("[data-w='next']", form), btnSend = $(".btn--send", form);
-  const msg = $(".wizard__msg");
-  const W = { step: 0, type: null, print: null };
-  const mbox = QBox.create($("#mockScene"), { w: 200, h: 160, d: 140, print: "none" });
-  mbox.root.classList.add("qbox--tween");
-  mbox.set({ rx: -20, ry: -36, s: 0.8 });
-
-  const syncWType = chips($("#wType"), C.products, () => W.type, (p) => p.name, (v) => { W.type = v; updateMock(); });
-  const syncWPrint = chips($("#wPrint"), C.prints, () => W.print, (p) => p.label + " — " + p.note, (v) => { W.print = v; updateMock(); });
-  const qtyIn = form.elements.qty, qtyOut = $(".qty__out");
-  qtyIn.addEventListener("input", () => updateMock());
-  ["L", "W", "H"].forEach((k) => form.elements[k].addEventListener("input", () => updateMock()));
-
-  function dimsMM() {
-    const v = (k) => parseFloat(form.elements[k].value);
-    return { L: v("L"), W: v("W"), H: v("H") };
-  }
-  function updateMock() {
-    syncWType(); syncWPrint();
-    qtyOut.textContent = QTY[qtyIn.value] + " وحدة";
-    const prod = C.products.find((p) => p.id === W.type);
-    const mm = dimsMM();
-    const ok = mm.L > 0 && mm.W > 0 && mm.H > 0;
-    let d = prod ? { ...prod.dims } : { w: 200, h: 160, d: 140 };
-    if (ok) { const k = 220 / Math.max(mm.L, mm.W, mm.H); d = { w: mm.L * k, h: mm.H * k, d: mm.W * k }; }
-    mbox.setDims(d).setFeatures(prod ? prod.features : []).setPrint(W.print || "none").setSector("none");
-    const r = $("#mockScene").getBoundingClientRect();
-    mbox.set({ s: fitScale(d, r.width || 300, r.height || 300, 0.42) });
-
-    const rows = [
-      ["TYPE", prod ? prod.name : "—"],
-      ["SIZE", ok ? `${mm.L} × ${mm.W} × ${mm.H} مم` : "—"],
-      ["QTY", QTY[qtyIn.value]],
-      ["PRINT", W.print ? C.prints.find((p) => p.id === W.print).label : "—"],
-    ];
-    $(".mock__sum").innerHTML = rows.map(([a, b]) => `<dt>${a}</dt><dd>${esc(b)}</dd>`).join("");
-  }
-  function validate(i) {
-    if (i === 0 && !W.type) return "اختر نوع الصندوق للمتابعة.";
-    if (i === 1) {
-      let bad = "";
-      ["L", "W", "H"].forEach((k) => {
-        const el = form.elements[k];
-        const v = parseFloat(el.value);
-        const ok = v >= +el.min && v <= +el.max;
-        el.classList.toggle("is-bad", !ok);
-        if (!ok) bad = "أدخل المقاسات بالمليمتر ضمن النطاق المسموح.";
-      });
-      return bad;
-    }
-    if (i === 3 && !W.print) return "اختر نوع الطباعة.";
-    if (i === 4) {
-      const nm = form.elements.name, ph = form.elements.phone;
-      nm.classList.toggle("is-bad", !nm.value.trim());
-      ph.classList.toggle("is-bad", !/^[+\d\s()-]{8,}$/.test(ph.value.trim()));
-      if (!nm.value.trim() || !/^[+\d\s()-]{8,}$/.test(ph.value.trim())) return "الاسم ورقم الجوال مطلوبان.";
-    }
-    return "";
-  }
-  function go(i) {
-    W.step = clamp(i, 0, steps.length - 1);
-    steps.forEach((s, k) => s.classList.toggle("is-on", k === W.step));
-    stepLabels.forEach((s, k) => { s.classList.toggle("is-on", k === W.step); s.classList.toggle("is-done", k < W.step); });
-    btnPrev.style.visibility = W.step === 0 ? "hidden" : "visible";
-    btnNext.hidden = W.step === steps.length - 1;
-    btnSend.hidden = W.step !== steps.length - 1;
-    msg.textContent = "";
-    // the mock re-folds a little at each step — the sheet becomes the box
-    mbox.fold(W.step === 0 ? 0.35 : lerp(0.55, 1, W.step / 4), 0);
-  }
-  btnNext.addEventListener("click", () => {
-    const err = validate(W.step);
-    if (err) { msg.textContent = err; return; }
-    go(W.step + 1);
-    const f = $("input, button.chip", steps[W.step]);
-    if (f && FINE) f.focus({ preventScroll: true });
-  });
-  btnPrev.addEventListener("click", () => go(W.step - 1));
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const err = validate(4);
-    if (err) { msg.textContent = err; return; }
-    const prod = C.products.find((p) => p.id === W.type);
-    const mm = dimsMM();
-    const el = form.elements;
-    const body = [
-      "طلب عرض سعر — عبر الموقع",
-      "",
-      "نوع الصندوق: " + prod.name,
-      "المقاسات (مم): " + `${mm.L} × ${mm.W} × ${mm.H}`,
-      "الكمية: " + QTY[el.qty.value],
-      "الطباعة: " + C.prints.find((p) => p.id === W.print).label,
-      "",
-      "الاسم: " + el.name.value,
-      "الشركة: " + el.company.value,
-      "الجوال: " + el.phone.value,
-      "البريد: " + el.email.value,
-      "ملاحظات: " + el.notes.value,
-    ].join("\n");
-    mbox.fold(1, 0);
-    location.href = `mailto:${C.contact.email}?subject=${encodeURIComponent("طلب عرض سعر — " + el.name.value)}&body=${encodeURIComponent(body)}`;
-    msg.textContent = "تم تجهيز طلبك في تطبيق البريد — اضغط إرسال لإتمامه، أو تواصل معنا على " + C.contact.main.display + ".";
-  });
-  const wizard = {
-    preset(type, print) {
-      W.type = type; W.print = print;
-      updateMock();
-      go(W.type ? 1 : 0);
-    },
-  };
-  updateMock();
-  go(0);
-
-  /* ------------------------------------------------------------------
-     12  FINALE — the finished box closes and steps aside
-     ------------------------------------------------------------------ */
-  const fbox = QBox.create($("#finaleScene"), { w: 260, h: 200, d: 170, print: "full", sector: "none" });
-  const fCopy = $(".finale__copy");
-  function finaleUpdate(p) {
-    const mob = mqMobile.matches;
-    const close = ease(seg(p, 0, 0.35));
-    const side = ease(seg(p, 0.3, 0.7));
-    fbox.fold(lerp(0.72, 1, close), lerp(1, 0, close));
-    fbox.set({
-      s: mob ? Math.min(vw / 560, 0.9) : clamp(vh / 560, 0.9, 1.6),
-      rx: -20, ry: lerp(-60, -30, close) + side * 8,
-      tx: mob ? 0 : lerp(0, -vw * 0.24, side),
-      ty: mob ? lerp(0, -vh * 0.14, side) : 0,
-    });
-    fCopy.style.setProperty("--copy", seg(p, 0.45, 0.75).toFixed(3));
-    fCopy.style.transform = mob ? `translateY(${(1 - seg(p, 0.45, 0.75)) * 30}px)` : `translateY(calc(-50% + ${(1 - seg(p, 0.45, 0.75)) * 30}px))`;
-  }
-  if (RM) finaleUpdate(1); else { finaleUpdate(0); scrub($(".finale__pin"), finaleUpdate, { k: 0.07 }); }
-
-  /* ------------------------------------------------------------------
      Resize
      ------------------------------------------------------------------ */
   let rt;
@@ -618,7 +382,6 @@
       vw = innerWidth; vh = innerHeight;
       heroLayout();
       renderProduct();
-      updateMock();
       scrubbers.forEach((s) => { s.last = -1; if (s.active) s.update(s.cur); });
       if (mqMobile.matches) aboutStatic();
     }, 120);
